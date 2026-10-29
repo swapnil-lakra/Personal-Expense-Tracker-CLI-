@@ -67,4 +67,52 @@ public class ExpenseManager {
         return true;
     }
 
+    public List<Expense> filterByCategory(Category category){
+        List<Expense> result = new ArrayList<>();
+        for(Expense e : expenses){
+            if(e.getCategory() == category){
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
+    public List<Expense> filterByDateRange(LocalDate from, LocalDate to){
+        List<Expense> result = new ArrayList<>();
+        for(Expense e: expenses){
+            LocalDate d = e.getDate();
+            if(!d.isBefore(from) && !d.isAfter(to)){
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
+    public List<Expense> filterByKeyword(String keyword){
+        List<Expense> result = new ArrayList<>();
+        if(keyword == null || keyword.trim().isEmpty()){
+            return result;
+        }
+
+        String lower = keyword.toLowerCase();
+        for(Expense e: expenses){
+            String desc = e.getDescription();
+            if(desc != null && desc.toLowerCase().contains(lower)){
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
+    public List<Expense> filterByAmountRange(double min,double max){
+        List<Expense> result = new ArrayList<>();
+        for(Expense e: expenses){
+            double amount = e.getAmount();
+            if(amount >= min && amount <= max){
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
 }
