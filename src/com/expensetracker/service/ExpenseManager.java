@@ -4,10 +4,13 @@ import com.expensetracker.exception.ExpenseNotFoundException;
 import com.expensetracker.model.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ExpenseManager {
     private List<Expense> expenses;
@@ -113,6 +116,46 @@ public class ExpenseManager {
             }
         }
         return result;
+    }
+
+    public double getTotal(){
+        double total = 0.0;
+        for(Expense e: expenses){
+            total += e.getAmount();
+        }
+        return total;
+    }
+
+    public Map<Category,Double> getCategoryWiseTotal(){
+        Map<Category,Double> total = new HashMap<>();
+        for(Expense e: expenses){
+            total.merge(e.getCategory(), e.getAmount(), Double::sum);
+        }
+        return total;
+    }
+
+    public Map<String,Double> getMonthlyReport(){
+        Map<String,Double> report = new TreeMap<>();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM");
+        for(Expense e: expenses){
+            String key = e.getDate().format(fmt);
+            report.merge(key, e.getAmount(), Double::sum);
+        }
+        return report;
+    }
+
+    public List<Expense> getTopNExpenses(int n){
+        if(n <= 0){
+            return  new ArrayList<>();
+        }
+
+        List<Expense> sorted = new ArrayList<>(expenses);
+        sorted.sort(Comparator.comparingDouble(Expense::getAmount).reversed());
+        if(n >= sorted.size()){
+            return sorted;
+        }
+
+        return new ArrayList<>(sorted.subList(0, n));
     }
 
 }
