@@ -158,4 +158,37 @@ public class ExpenseManager {
         return new ArrayList<>(sorted.subList(0, n));
     }
 
+    public double getAverageExpense(){
+        if(expenses.isEmpty()){
+            return 0.0;
+        }
+        return getTotal() / expenses.size();
+    }
+
+    public List<Expense> sortBy(String field,boolean ascending){
+        List<Expense> sorted = new ArrayList<>(expenses);
+        Comparator<Expense> comparator;
+
+        switch (field.toUpperCase()) {
+            case "DATE":
+                comparator = Comparator.comparing(Expense::getDate);
+                break;
+            case "AMOUNT":
+                comparator = Comparator.comparing(Expense::getAmount);
+                break;
+            case "CATEGORY":
+                comparator = Comparator.comparing(Expense::getCategory);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown sort field: "+field);
+        }
+
+        if(!ascending){
+            comparator = comparator.reversed();
+        }
+
+        sorted.sort(comparator);
+        return sorted;
+    }
+
 }
