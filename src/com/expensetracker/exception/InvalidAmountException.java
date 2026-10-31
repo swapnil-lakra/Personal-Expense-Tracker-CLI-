@@ -3,11 +3,11 @@ package com.expensetracker.exception;
 public class InvalidAmountException extends Exception {
     private static final long serialVersionUID = 1L;
     
-    InvalidAmountException(String message){
+    public InvalidAmountException(String message){
         super(message);
     }
 
-    InvalidAmountException(String message,Throwable cause){
+    public InvalidAmountException(String message,Throwable cause){
         super(message,cause);
     }
 }
